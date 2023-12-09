@@ -2,4 +2,4 @@
 # Include some of your custom scripts here!
 
 fish:
-    sudo lchsh /usr/bin/fish
+    sudo lchsh $USER /usr/bin/fish
