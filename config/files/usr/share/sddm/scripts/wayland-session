@@ -1,0 +1,35 @@
+#!/bin/sh
+# wayland-session - run as user
+# Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+
+# This file is extracted from kde-workspace (kdm/kfrontend/genkdmconf.c)
+# Copyright (C) 2001-2005 Oswald Buddenhagen <ossi@kde.org>
+
+# ======================
+# This file is needed to fix an issue with
+# SDDM + Wayland + fish as login shell:
+# https://github.com/sddm/sddm/issues/1768
+# ======================
+
+# Note that the respective logout scripts are not sourced.
+
+case $SHELL in
+  */bash|*/zsh)
+    exec $SHELL --login -c 'exec "$@"' - $@
+    ;;
+  */csh|*/tcsh)
+    exec $SHELL -c 'if (-f /etc/csh.login) source /etc/csh.login; if (-f ~/.login) source ~/.login; exec $argv' $@
+    ;;
+  */fish)
+    [ -f /etc/profile ] && . /etc/profile
+    [ -f $HOME/.profile ] && . $HOME/.profile
+    exec $SHELL --login -c 'exec $argv' $@
+    ;;
+  *) # Plain sh, ksh, and anything we do not know.
+    [ -f /etc/profile ] && . /etc/profile
+    [ -f $HOME/.profile ] && . $HOME/.profile
+    exec $@
+    ;;
+esac
+
+exit 1
