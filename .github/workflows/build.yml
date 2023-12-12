@@ -1,11 +1,5 @@
-# This workflow builds every branch of the repository daily at 16:30 UTC, one hour after ublue-os/nvidia builds.
-# The images are also built after pushing changes or pull requests.
-# The builds can also be triggered manually in the Actions tab thanks to workflow dispatch.
-# Only the branch called `live` is published.
-
-
-name: build-ublue
-on: # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+name: build sidusio/sediment
+on:
   schedule:
     - cron: "30 16 * * *"
   push:
@@ -13,16 +7,16 @@ on: # https://docs.github.com/en/actions/using-workflows/events-that-trigger-wor
       - live
       - template
       - main
-    paths-ignore: # don't rebuild if only documentation has changed
+    paths-ignore:
       - "**.md"
   pull_request:
+    paths-ignore:
+      - "**.md"
   workflow_dispatch:
 
 env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
 
-# Only deploys the branch named "live". Ignores all other branches, to allow
-# having "development" branches without interfering with GHCR image uploads.
 jobs:
   push-ghcr:
     name: Build and push image
@@ -35,12 +29,8 @@ jobs:
       fail-fast: false
 
       matrix:
-# !!!
-        # Add recipes for all the images you want to build here.
-        # Don't add module configuration files, you will get errors.
         recipe:
           - recipe.yml
-# !!!
 
     steps:
       - name: Maximize build space
@@ -50,7 +40,6 @@ jobs:
           remove-android: 'true'
           remove-haskell: 'true'
 
-      # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
 
@@ -111,7 +100,6 @@ jobs:
           done
           echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
 
-      # Build metadata
       - name: Image Metadata
         uses: docker/metadata-action@v5
         id: meta
@@ -139,7 +127,6 @@ jobs:
         with:
           string: ${{ env.IMAGE_NAME }}
 
-      # Build image using Buildah action
       - name: Build Image
         id: build_image
         uses: redhat-actions/buildah-build@v2
@@ -157,7 +144,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
 
-      # Push the image to GHCR (Image Registry)
       - name: Push To GHCR
         uses: redhat-actions/push-to-registry@v2
         id: push
@@ -182,7 +168,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Sign container
       - uses: sigstore/cosign-installer@v3.2.0
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/live'
 
