@@ -12,11 +12,14 @@ if [[ ! -f $(which git) || ! -f $(which curl) ]]; then
     exit 1
 fi
 
+ASDF_DIR=/opt/asdf
+FISH_DIR=/etc/fish
+
 echo '2. Downloading source'
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
+git clone https://github.com/asdf-vm/asdf.git $ASDF_DIR --branch v0.13.1
 
 echo '3. Install (for fish)'
-echo 'source ~/.asdf/asdf.fish' >> ~/.config/fish/config.fish
+echo "source $ASDF_DIR/asdf.fish" >> $FISH_DIR/config.fish
 
 echo '4. Add completions (for fish)'
-mkdir -p ~/.config/fish/completions && ln -s ~/.asdf/completions/asdf.fish ~/.config/fish/completions
+mkdir -p $FISH_DIR/completions && ln -s $ASDF_DIR/completions/asdf.fish $FISH_DIR/completions
