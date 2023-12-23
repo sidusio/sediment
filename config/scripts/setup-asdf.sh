@@ -12,8 +12,8 @@ if [[ ! -f $(which git) || ! -f $(which curl) ]]; then
     exit 1
 fi
 
-ASDF_DIR=/opt/asdf
-FISH_DIR=/etc/fish
+ASDF_DIR=/usr/opt/asdf
+FISH_DIR=/usr/etc/fish
 
 echo '2. Downloading source'
 git clone https://github.com/asdf-vm/asdf.git $ASDF_DIR --branch v0.13.1
