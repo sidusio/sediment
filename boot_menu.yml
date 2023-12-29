@@ -2,4 +2,4 @@ ublue_variants:
   - label: sidusIO/sediment
     ks: /kickstart/ublue-os.ks
     flavors:
-      - label: startingpoint
+      - label: sediment
