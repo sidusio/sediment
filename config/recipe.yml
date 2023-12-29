@@ -25,6 +25,8 @@ modules:
   - type: rpm-ostree
     install:
       - fish
+      - greetd
+      - gtkgreet
 
   # configure what to pull in from ublue-os/bling
   - type: bling 
@@ -40,3 +42,10 @@ modules:
       # set up the proper policy & signing files for signed images to work
       - signing.sh
       - setup-asdf.sh
+
+  - type: systemd
+    system:
+      enabled:
+        - greetd.service
+      disabled:
+        - sddm.service
