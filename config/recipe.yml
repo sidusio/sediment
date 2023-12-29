@@ -28,6 +28,7 @@ modules:
 
       - lightdm
       - lightdm-gtk
+      - xorg-x11-server-Xorg
 
   # configure what to pull in from ublue-os/bling
   - type: bling 
