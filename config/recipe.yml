@@ -29,6 +29,9 @@ modules:
       - lightdm
       - lightdm-gtk
       - xorg-x11-server-Xorg
+    remove:
+      - sddm
+      - sddm-wayland-sway
 
   # configure what to pull in from ublue-os/bling
   - type: bling 
@@ -49,5 +52,3 @@ modules:
     system:
       enabled:
         - lightdm.service
-      disabled:
-        - sddm.service
