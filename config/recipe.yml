@@ -23,8 +23,12 @@ modules:
                   # config directory on ostree. Read more in the files module's README
 
   - type: rpm-ostree
+    repos:
+      - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
       - fish
+      - docker-ce
+      - docker-ce-cli
 
       - lightdm
       - lightdm-gtk
@@ -52,3 +56,4 @@ modules:
     system:
       enabled:
         - lightdm.service
+        - docker
