@@ -23,10 +23,14 @@ modules:
                   # config directory on ostree. Read more in the files module's README
 
   - type: rpm-ostree
+    repos:
+      - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
       - fish
       - greetd
       - gtkgreet
+      - docker-ce
+      - docker-ce-cli
 
   # configure what to pull in from ublue-os/bling
   - type: bling 
@@ -46,6 +50,7 @@ modules:
   - type: systemd
     system:
       enabled:
+        - docker
         - greetd.service
       disabled:
         - sddm.service
