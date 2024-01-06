@@ -28,6 +28,7 @@ modules:
     install:
       - fish
       - greetd
+      - greetd-selinux
       - gtkgreet
       - docker-ce
       - docker-ce-cli
