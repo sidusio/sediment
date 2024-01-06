@@ -27,7 +27,6 @@ modules:
       - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
       - fish
-      - greetd
       - greetd-selinux
       - gtkgreet
       - docker-ce
