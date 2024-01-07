@@ -6,7 +6,7 @@ Before=greetd.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/greetd-selinux-workaround
+ExecStart=/usr/sbin/greetd-selinux-workaround
 
 [Install]
 WantedBy=multi-user.target
