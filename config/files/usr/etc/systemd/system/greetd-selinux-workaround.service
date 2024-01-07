@@ -1,0 +1,12 @@
+[Unit]
+Description=Workaround greetd not having the correct SElinux label
+ConditionFileIsExecutable=/usr/bin/greetd
+After=local-fs.target
+Before=greetd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/greetd-selinux-workaround
+
+[Install]
+WantedBy=multi-user.target
