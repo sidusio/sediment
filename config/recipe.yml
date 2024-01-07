@@ -49,7 +49,6 @@ modules:
       # set up the proper policy & signing files for signed images to work
       - signing.sh
       - setup-asdf.sh
-      - greetd-workaround.sh
 
   - type: systemd
     system:
