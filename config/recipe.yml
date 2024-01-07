@@ -27,8 +27,13 @@ modules:
       - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
       - fish
+      - greetd
+      - gtkgreet
       - docker-ce
       - docker-ce-cli
+    remove:
+      - sddm
+      - sddm-wayland-sway
 
   # configure what to pull in from ublue-os/bling
   - type: bling 
@@ -44,11 +49,13 @@ modules:
       # set up the proper policy & signing files for signed images to work
       - signing.sh
       - setup-asdf.sh
-  
+
   - type: systemd
     system:
       enabled:
         - docker
+        - greetd.service
+        - greetd-selinux-workaround.service
 
   - type: fonts
     fonts:
