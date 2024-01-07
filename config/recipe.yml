@@ -56,6 +56,7 @@ modules:
       enabled:
         - docker
         - greetd.service
+        - greetd-selinux-workaround.service
 
   - type: fonts
     fonts:
