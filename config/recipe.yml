@@ -31,6 +31,9 @@ modules:
       - gtkgreet
       - docker-ce
       - docker-ce-cli
+    remove:
+      - sddm
+      - sddm-wayland-sway
 
   # configure what to pull in from ublue-os/bling
   - type: bling 
@@ -52,8 +55,6 @@ modules:
       enabled:
         - docker
         - greetd.service
-      disabled:
-        - sddm.service
 
   - type: fonts
     fonts:
