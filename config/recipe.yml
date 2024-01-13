@@ -48,7 +48,6 @@ modules:
     scripts:
       # set up the proper policy & signing files for signed images to work
       - signing.sh
-      - setup-asdf.sh
 
   - type: systemd
     system:
