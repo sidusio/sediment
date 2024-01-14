@@ -1,6 +1,4 @@
-import '100-bling.just'
-
-# It is preferrable to install this into user-space since
+# It is preferrable to install ASDF into user-space since
 # that allows for nice integration with distroboxes.
 
 # Install ASDF
