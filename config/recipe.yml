@@ -38,7 +38,6 @@ modules:
   # configure what to pull in from ublue-os/bling
   - type: bling 
     install:
-      - justfiles 
       - ublue-os-wallpapers
       - ublue-update
       - container-tools # installs container-related tools onto /usr/bin: kind, kubectx, docker-compose and kubens
@@ -48,7 +47,6 @@ modules:
     scripts:
       # set up the proper policy & signing files for signed images to work
       - signing.sh
-      - setup-asdf.sh
 
   - type: systemd
     system:
