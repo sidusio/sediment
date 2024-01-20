@@ -130,9 +130,6 @@ jobs:
       - name: Build Image
         id: build_image
         uses: redhat-actions/buildah-build@v2
-        env:
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-          GITHUB_SHA: ${{ github.sha }}
         with:
           containerfiles: |
             ./Containerfile
@@ -144,6 +141,8 @@ jobs:
             BASE_IMAGE_URL=${{ env.BASE_IMAGE_URL }}
             RECIPE=${{ matrix.recipe }}
             IMAGE_REGISTRY=${{ steps.registry_case.outputs.lowercase }}
+            GITHUB_REF_NAME=${{ github.ref_name }}
+            GITHUB_SHA=${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           oci: false
 
