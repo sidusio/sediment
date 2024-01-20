@@ -12,14 +12,14 @@
 ARG IMAGE_MAJOR_VERSION=39
 ARG BASE_IMAGE_URL=ghcr.io/ublue-os/silverblue-main
 
+
+FROM ${BASE_IMAGE_URL}:${IMAGE_MAJOR_VERSION}
+
 # To enable boot entries to be tagged with commit hash,
 # PR number and branch we need to pass through some information
 # from the builder.
 ARG GITHUB_REF_NAME
 ARG GITHUB_SHA
-
-
-FROM ${BASE_IMAGE_URL}:${IMAGE_MAJOR_VERSION}
 
 # The default recipe is set to the recipe's default filename
 # so that `podman build` should just work for most people.
