@@ -19,6 +19,7 @@ FROM ${BASE_IMAGE_URL}:${IMAGE_MAJOR_VERSION}
 # PR number and branch we need to pass through some information
 # from the builder.
 ARG GITHUB_REF_NAME
+ARG GITHUB_PR_HEAD_SHA
 ARG GITHUB_SHA
 
 # The default recipe is set to the recipe's default filename
