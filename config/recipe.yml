@@ -47,6 +47,7 @@ modules:
     scripts:
       # set up the proper policy & signing files for signed images to work
       - signing.sh
+      - fingerprint.sh
 
   - type: systemd
     system:
