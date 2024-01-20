@@ -48,6 +48,7 @@ modules:
       # set up the proper policy & signing files for signed images to work
       - signing.sh
       - fingerprint.sh
+      - set-boot-entry-name.sh
 
   - type: systemd
     system:
