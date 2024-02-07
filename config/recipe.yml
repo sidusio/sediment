@@ -31,6 +31,8 @@ modules:
       - gtkgreet
       - docker-ce
       - docker-ce-cli
+      - kubernetes-client
+      - docker-compose
     remove:
       - sddm
       - sddm-wayland-sway
