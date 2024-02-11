@@ -33,6 +33,7 @@ modules:
       - docker-ce
       - docker-ce-cli
       - kubernetes-client
+      - brave-browser
     remove:
       - sddm
       - sddm-wayland-sway
