@@ -32,6 +32,10 @@ modules:
       - docker-ce
       - docker-ce-cli
       - kubernetes-client
+      - grim
+      - slurp
+      - swappy
+      - wf-recorder
     remove:
       - sddm
       - sddm-wayland-sway
