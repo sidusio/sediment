@@ -8,4 +8,4 @@ screenshot:
 
 # Record the screen, recordin is saved to ~/Videos/screencapture-{timestamp}.mkv
 screencapture:
-     wf-recorder -f "$HOME/Videos/screencapture-$(date +%Y-%m-%dT%H:%M:%S).mkv"
+    wf-recorder -f "$HOME/Videos/screencapture-$(date +%Y-%m-%dT%H:%M:%S).mkv"
