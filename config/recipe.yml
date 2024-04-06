@@ -40,7 +40,6 @@ modules:
       - sddm
       - sddm-wayland-sway
 
-  # configure what to pull in from ublue-os/bling
   - type: bling 
     install:
       - ublue-os-wallpapers
@@ -49,10 +48,7 @@ modules:
 
   - type: script
     scripts:
-      # set up the proper policy & signing files for signed images to work
-      - signing.sh
       - fingerprint.sh
-      - set-boot-entry-name.sh
 
   - type: systemd
     system:
@@ -73,3 +69,5 @@ modules:
       google-fonts:
         - Roboto
         - Open Sans
+
+  - type: signing # this sets up the proper policy & signing files for signed images to work fully
