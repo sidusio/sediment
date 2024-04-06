@@ -68,4 +68,19 @@ modules:
         - Roboto
         - Open Sans
 
+  - type: containerfile
+    snippets:
+      - COPY /tmp/gh /tmp/gh
+      - ENV GITHUB_REF_NAME=$(cat /tmp/gh/ref_name)
+      - ENV GITHUB_PR_HEAD_SHA=$(cat /tmp/gh/pr_head_sha)
+      - ENV GITHUB_SHA=$(cat /tmp/gh/sha)
+
+  - type: script
+    scripts:
+      - set-boot-entry-name.sh
+
+  - type: containerfile
+    snippets:
+      - RUN rm -rf /tmp/gh
+
   - type: signing # this sets up the proper policy & signing files for signed images to work fully

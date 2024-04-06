@@ -24,9 +24,18 @@ jobs:
           # !! Add your recipes here 
           - recipe.yml
     steps:
-       # the build is fully handled by the reusable github action
+      # clones user's repo
+      - uses: actions/checkout@v4
+
+      - run: |
+          mkdir -p /tmp/gh
+          echo "${{ github.ref_name }}" > /tmp/gh/ref_name
+          echo "${{ github.event.pull_request.head.sha }}" > /tmp/gh/pr_head_sha
+          echo "${{ github.sha }}" > /tmp/gh/sha
+
+      # the build is fully handled by the reusable github action
       - name: Build Custom Image
-        uses: blue-build/github-action@v1.3
+        uses: .github/actions/blue-build
         with:
           recipe: ${{ matrix.recipe }}
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
