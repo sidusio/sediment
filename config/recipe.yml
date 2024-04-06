@@ -27,8 +27,7 @@ modules:
       - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
       - fish
-      - greetd
-      - gtkgreet
+      - gdm
       - docker-ce
       - docker-ce-cli
     remove:
@@ -53,8 +52,7 @@ modules:
     system:
       enabled:
         - docker
-        - greetd.service
-        - greetd-selinux-workaround.service
+        - gdm
 
   - type: fonts
     fonts:
