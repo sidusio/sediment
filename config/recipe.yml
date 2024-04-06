@@ -71,9 +71,9 @@ modules:
   - type: containerfile
     snippets:
       - COPY /tmp/gh /tmp/gh
-      - ENV GITHUB_REF_NAME=$(cat /tmp/gh/ref_name)
-      - ENV GITHUB_PR_HEAD_SHA=$(cat /tmp/gh/pr_head_sha)
-      - ENV GITHUB_SHA=$(cat /tmp/gh/sha)
+      - ENV GITHUB_REF_NAME $(cat /tmp/gh/ref_name)
+      - ENV GITHUB_PR_HEAD_SHA $(cat /tmp/gh/pr_head_sha)
+      - ENV GITHUB_SHA $(cat /tmp/gh/sha)
 
   - type: script
     scripts:
