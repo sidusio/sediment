@@ -43,7 +43,6 @@ modules:
     install:
       - ublue-os-wallpapers
       - ublue-update
-      - laptop # installs TLP and configures your system for laptop usage
 
   - type: script
     scripts:
