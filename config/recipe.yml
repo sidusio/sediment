@@ -7,7 +7,7 @@ description: Sericea-based image with quality of life improvements
 base-image: ghcr.io/ublue-os/sericea-main
 
 # latest is also supported if you want new updates ASAP
-image-version: 39 
+image-version: 40
 
 # module configuration, executed in order
 # you can include multiple instances of the same module
