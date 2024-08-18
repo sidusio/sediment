@@ -9,26 +9,44 @@ on:
       
   pull_request:
   workflow_dispatch: # allow manually triggering builds
+
 jobs:
-  bluebuild:
-    name: Build Custom Image
+  generate-tags:
+    name: Generate Tags
     runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.tags.outputs.tags }}
+
+    steps:
+      - id: tags
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            TAGS="pr-${{ github.event.pull_request.number }} ${{ github.event.pull_request.head.sha }}"
+          elif [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref_name }}" == "main" ]; then
+            TAGS="latest ${{ github.sha }}"
+          else
+            TAGS="${{ github.sha }}"
+          fi
+          echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
+
+  build-image:
+    name: Build Custom Image
+    needs: generate-tags
     permissions:
       contents: read
       packages: write
       id-token: write
-    strategy:
-      fail-fast: false # stop GH from cancelling all matrix builds if one fails
-      matrix:
-        recipe:
-          # !! Add your recipes here 
-          - recipe.yml
+    # Ubuntu 24.04 has Podman 4 installed from scratch
+    runs-on: ubuntu-24.04
+
     steps:
-       # the build is fully handled by the reusable github action
-      - name: Build Custom Image
-        uses: blue-build/github-action@v1.3
-        with:
-          recipe: ${{ matrix.recipe }}
-          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
-          registry_token: ${{ github.token }}
-          pr_event_number: ${{ github.event.number }}
+    - uses: sigstore/cosign-installer@v3.5.0
+    - uses: actions/checkout@v4
+    - name: Buildah Action
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ github.repository }}/sediment
+        containerfiles: Containerfile
+        oci: true
+        tags: ${{ needs.generate-tags.outputs.tags }}
