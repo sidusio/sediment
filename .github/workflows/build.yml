@@ -4,6 +4,8 @@ on:
     - cron: "00 17 * * *" # build at 17:00 UTC every day 
                           # (20 minutes after last ublue images start building)
   push:
+    branches:
+      - main
     paths-ignore: # don't rebuild if only documentation has changed
       - "**.md"
       
@@ -25,8 +27,6 @@ jobs:
             TAGS="pr-${{ github.event.pull_request.number }} ${{ github.event.pull_request.head.sha }}"
           elif [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref_name }}" == "main" ]; then
             TAGS="latest ${{ github.sha }}"
-          else
-            TAGS="${{ github.sha }}"
           fi
           echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
 
