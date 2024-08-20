@@ -48,5 +48,4 @@ jobs:
       with:
         image: ${{ github.repository }}/sediment
         containerfiles: Containerfile
-        oci: true
         tags: ${{ needs.generate-tags.outputs.tags }}
