@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-FONTS=$@
+FONTS=($@)
 URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download"
 DEST="/usr/share/fonts/nerd-fonts"
 

@@ -1,9 +1,15 @@
-FROM ghcr.io/ublue-os/sericea-main:40
+ARG OS_VERSION=40
+
+FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
+
+ARG OS_VERSION
+ENV OS_VERSION $OS_VERSION
 
 COPY config/files/usr /usr
 
 # Swap SDDM for GDM
-RUN rpm-ostree remove \
+RUN \
+    rpm-ostree override remove \
       sddm \
       sddm-wayland-sway && \
     rpm-ostree install \
@@ -30,15 +36,17 @@ RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" \
       docker
 
 # Fingerprint reader setup
-RUN authselect enable-feature with-fingerprint \
+RUN authselect enable-feature with-fingerprint && \
     authselect apply-changes
 
 # Install ublue-update
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/blue-build/modules/7ad6f3b1a766508085525cd979430de2639db652/modules/bling/installers/ublue-update.sh)"
 
 # Fonts
-COPY config/scripts/{google,nerd}-fonts.sh /tmp/
-RUN chmod +x /tmp/{google,nerd}-fonts.sh
+COPY --chmod=744 \
+    config/scripts/google-fonts.sh \
+    config/scripts/nerd-fonts.sh \
+    /tmp/
 RUN /tmp/google-fonts.sh \
     "Roboto" \
     "Open Sans"

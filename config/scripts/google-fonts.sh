@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-FONTS=$@
+FONTS=($@)
 DEST="/usr/share/fonts/google-fonts"
 
 echo "Installation of google-fonts started"
