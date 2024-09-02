@@ -41,7 +41,7 @@ jobs:
       id: build
       uses: redhat-actions/buildah-build@v2
       with:
-        image: ${{ github.repository }}/sediment
+        image: ${{ github.repository }}
         containerfiles: Containerfile
         tags: ${{ steps.tags.outputs.tags }}
 
