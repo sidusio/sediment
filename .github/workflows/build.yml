@@ -63,7 +63,7 @@ jobs:
     - name: Sign container image
       shell: bash
       run: |
-        tags=$(echo $TAGS | jq .[])
+        tags=$(echo $TAGS | jq .[] --raw-output)
         images=""
         for tag in ${tags}; do
           images+="${tag}@${DIGEST} "
