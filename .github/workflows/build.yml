@@ -69,7 +69,7 @@ jobs:
 
         cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
       env:
-        TAGS: ${{ steps.push.outputs.registry_paths }}
+        TAGS: ${{ steps.push.outputs.registry-paths }}
         DIGEST: ${{ steps.push.outputs.digest }}
         COSIGN_EXPERIMENTAL: false
         COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
