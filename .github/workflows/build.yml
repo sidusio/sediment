@@ -61,9 +61,10 @@ jobs:
 
     - uses: sigstore/cosign-installer@v3.6.0
     - name: Sign container image
+      shell: bash
       run: |
         images=""
-        for tag in ${TAGS}; do
+        for tag in ${TAGS[@]}; do
           images+="${tag}@${DIGEST} "
         done
 
