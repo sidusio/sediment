@@ -5,7 +5,7 @@ FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
 ARG OS_VERSION
 ENV OS_VERSION $OS_VERSION
 
-COPY config/files/usr /usr
+COPY files/usr /usr
 
 # Swap SDDM for GDM
 RUN \
