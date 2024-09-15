@@ -44,8 +44,8 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/blue-build/modules/7ad
 
 # Fonts
 COPY --chmod=744 \
-    config/scripts/google-fonts.sh \
-    config/scripts/nerd-fonts.sh \
+    scripts/google-fonts.sh \
+    scripts/nerd-fonts.sh \
     /tmp/
 RUN /tmp/google-fonts.sh \
     "Roboto" \
