@@ -4,31 +4,76 @@ on:
     - cron: "00 17 * * *" # build at 17:00 UTC every day 
                           # (20 minutes after last ublue images start building)
   push:
+    branches:
+      - main
     paths-ignore: # don't rebuild if only documentation has changed
       - "**.md"
       
   pull_request:
   workflow_dispatch: # allow manually triggering builds
+
+env:
+  REGISTRY: ghcr.io
+
 jobs:
-  bluebuild:
+  build-image:
     name: Build Custom Image
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       id-token: write
-    strategy:
-      fail-fast: false # stop GH from cancelling all matrix builds if one fails
-      matrix:
-        recipe:
-          # !! Add your recipes here 
-          - recipe.yml
+    # Ubuntu 24.04 has Podman 4 installed from scratch
+    runs-on: ubuntu-24.04
+
     steps:
-       # the build is fully handled by the reusable github action
-      - name: Build Custom Image
-        uses: blue-build/github-action@v1.3
-        with:
-          recipe: ${{ matrix.recipe }}
-          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
-          registry_token: ${{ github.token }}
-          pr_event_number: ${{ github.event.number }}
+    - uses: actions/checkout@v4
+
+    - name: Generate Image Tags
+      id: tags
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          TAGS="pr-${{ github.event.pull_request.number }} ${{ github.event.pull_request.head.sha }}"
+        elif [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref_name }}" == "main" ]; then
+          TAGS="latest ${{ github.sha }}"
+        fi
+        echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
+
+    - name: Build Image
+      id: build
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ github.repository }}
+        containerfiles: Containerfile
+        tags: ${{ steps.tags.outputs.tags }}
+
+    - uses: redhat-actions/podman-login@v1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: github_workflow
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push Images
+      id: push
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        image: ${{ steps.build.outputs.image }}
+        tags: ${{ steps.tags.outputs.tags }}
+
+    - uses: sigstore/cosign-installer@v3.6.0
+    - name: Sign container image
+      shell: bash
+      run: |
+        tags=$(echo $TAGS | jq .[] --raw-output)
+        images=""
+        for tag in ${tags}; do
+          images+="${tag}@${DIGEST} "
+        done
+
+        cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
+      env:
+        TAGS: ${{ steps.push.outputs.registry-paths }}
+        DIGEST: ${{ steps.push.outputs.digest }}
+        COSIGN_EXPERIMENTAL: false
+        COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
