@@ -27,7 +27,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - id: tags
+
+    - name: Generate Image Tags
+      id: tags
       shell: bash
       run: |
         if [ "${{ github.event_name }}" == "pull_request" ]; then
@@ -36,6 +38,7 @@ jobs:
           TAGS="latest ${{ github.sha }}"
         fi
         echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
+
     - name: Build Image
       id: build
       uses: redhat-actions/buildah-build@v2
@@ -44,8 +47,7 @@ jobs:
         containerfiles: Containerfile
         tags: ${{ steps.tags.outputs.tags }}
 
-    - name: Login to GitHub Container Registry
-      uses: redhat-actions/podman-login@v1
+    - uses: redhat-actions/podman-login@v1
       with:
         registry: ${{ env.REGISTRY }}
         username: github_workflow
