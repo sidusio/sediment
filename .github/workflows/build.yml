@@ -46,6 +46,10 @@ jobs:
         image: ${{ github.repository }}
         containerfiles: Containerfile
         tags: ${{ steps.tags.outputs.tags }}
+        build-args: |
+          GITHUB_SHA=${{ github.sha }}
+          GITHUB_REF_NAME=${{ github.ref_name }}
+          GITHUB_PR_HEAD_SHA=${{ github.event.pull_request.head.sha }}
 
     - uses: redhat-actions/podman-login@v1
       with:
