@@ -55,8 +55,8 @@ COPY signing/cosign.pub /usr/etc/pki/containers/sediment.pub
 COPY signing/registry-config.yaml /usr/etc/containers/registries.d/sediment.yaml
 
 # Set boot entry name
-COPY --chmod=700 scripts/set-boot-entry.sh /tmp/
-RUN /tmp/set-boot-entry.sh
+COPY --chmod=700 scripts/set-os-release-pretty-name.sh /tmp/
+RUN /tmp/set-os-release-pretty-name.sh
 
 # Finally, validate
 RUN ostree container commit
