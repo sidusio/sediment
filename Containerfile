@@ -3,7 +3,17 @@ ARG OS_VERSION=40
 FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
 
 ARG OS_VERSION
-ENV OS_VERSION $OS_VERSION
+ENV OS_VERSION=$OS_VERSION
+
+ARG GITHUB_SHA
+ENV GITHUB_SHA=$GITHUB_SHA
+
+ARG GITHUB_PR_HEAD_SHA
+ENV GITHUB_PR_HEAD_SHA=$GITHUB_PR_HEAD_SHA
+
+ARG GITHUB_REF_NAME
+ENV GITHUB_REF_NAME=$GITHUB_REF_NAME
+
 
 COPY files/usr /usr
 
@@ -43,6 +53,10 @@ RUN /tmp/nerd-fonts.sh "FiraCode" "Hack" "SourceCodePro" "Terminus" "JetBrainsMo
 COPY signing/policy.json /usr/etc/containers/
 COPY signing/cosign.pub /usr/etc/pki/containers/sediment.pub
 COPY signing/registry-config.yaml /usr/etc/containers/registries.d/sediment.yaml
+
+# Set boot entry name
+COPY --chmod=700 scripts/set-boot-entry.sh /tmp/
+RUN /tmp/set-boot-entry.sh
 
 # Finally, validate
 RUN ostree container commit
