@@ -37,6 +37,11 @@ RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://d
   rpm-ostree install docker-ce docker-ce-cli && \
   systemctl enable docker
 
+# DisplayLink driver
+RUN curl -c "/etc/yum.repos.d/displaylink.repo" "https://copr.fedorainfracloud.org/coprs/crashdummy/Displaylink/repo/fedora-40/crashdummy-Displaylink-fedora-40.repo" && \
+  rpm-ostree install displaylink && \
+  systemctl enable displaylink-driver
+
 # Fingerprint reader setup
 RUN authselect enable-feature with-fingerprint && \
   authselect apply-changes
