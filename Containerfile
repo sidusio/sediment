@@ -38,9 +38,8 @@ RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://d
   systemctl enable docker
 
 # DisplayLink driver
-RUN curl -o "/etc/yum.repos.d/displaylink.repo" "https://copr.fedorainfracloud.org/coprs/crashdummy/Displaylink/repo/fedora-${OS_VERSION}/crashdummy-Displaylink-fedora-${OS_VERSION}.repo" && \
-  rpm-ostree install displaylink && \
-  systemctl enable displaylink-driver
+COPY --from=ghcr.io/ublue-os/akmods:main-${OS_VERSION} /rpms/ /tmp/rpms
+RUN rpm-ostree install /tmp/rpms/kmods/kmod-evdi.rpm
 
 # Fingerprint reader setup
 RUN authselect enable-feature with-fingerprint && \
