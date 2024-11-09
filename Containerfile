@@ -39,7 +39,7 @@ RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://d
 
 # DisplayLink driver
 COPY --from=ghcr.io/ublue-os/akmods:main-${OS_VERSION} /rpms/ /tmp/rpms
-RUN rpm-ostree install /tmp/rpms/kmods/kmod-evdi.rpm
+RUN rpm-ostree install /tmp/rpms/kmods/kmod-evdi-*.rpm
 
 # Fingerprint reader setup
 RUN authselect enable-feature with-fingerprint && \
