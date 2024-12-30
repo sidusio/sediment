@@ -19,7 +19,7 @@ COPY files/usr /usr
 
 # Swap SDDM for GDM
 RUN \
-  dnf override remove sddm sddm-wayland-sway && \
+  dnf remove sddm sddm-wayland-sway && \
   dnf install gdm && \
   systemctl enable gdm
 
