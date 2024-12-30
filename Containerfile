@@ -1,4 +1,4 @@
-ARG OS_VERSION=40
+ARG OS_VERSION=41
 
 FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
 
@@ -19,12 +19,12 @@ COPY files/usr /usr
 
 # Swap SDDM for GDM
 RUN \
-  rpm-ostree override remove sddm sddm-wayland-sway && \
-  rpm-ostree install gdm && \
+  dnf remove -y sddm sddm-wayland-sway && \
+  dnf install gdm && \
   systemctl enable gdm
 
 # Misc. packages
-RUN rpm-ostree install \
+RUN dnf install \
   fish \
   kubernetes-client \
   grim \
@@ -34,7 +34,7 @@ RUN rpm-ostree install \
 
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
-  rpm-ostree install docker-ce docker-ce-cli && \
+  dnf install docker-ce docker-ce-cli && \
   systemctl enable docker
 
 # Fingerprint reader setup
