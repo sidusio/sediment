@@ -65,7 +65,7 @@ jobs:
         image: ${{ steps.build.outputs.image }}
         tags: ${{ steps.tags.outputs.tags }}
 
-    - uses: sigstore/cosign-installer@v3.6.0
+    - uses: sigstore/cosign-installer@v3.7.0
     - name: Sign container image
       shell: bash
       run: |
