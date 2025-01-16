@@ -23,7 +23,7 @@ jobs:
         id: build
         with:
           arch: x86_64
-          image_name: ${{ github.event.repository.name }}
+          image_name: ${{ github.repository }}
           image_repo: ${{ env.REGISTRY }}
           image_tag: latest
           version: ${{ env.FEDORA_VERSION }}
