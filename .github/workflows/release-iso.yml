@@ -30,14 +30,23 @@ jobs:
           variant: ${{ github.event.repository.name }}
           iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}-${{ env.FEDORA_VERSION }}.iso
 
-      - name: Upload ISO as artifact
-        id: upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build.outputs.iso_name }}
-          path: |
-            ${{ steps.build.outputs.iso_path }}
-            ${{ steps.build.outputs.iso_path }}-CHECKSUM
-          if-no-files-found: error
-          retention-days: 0
-          compression-level: 0
+      - name: install github CLI
+        run: |
+          sudo dnf install 'dnf-command(config-manager)' -y
+          sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+          sudo dnf install gh -y
+      - name: Upload ISO
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if gh release list -R ${{ github.repository_owner }}/${{ github.event.repository.name }} | grep "auto-iso"; then
+            gh release view auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --json assets -q .assets[].name | xargs -L 1 gh release delete-asset auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
+            gh release upload auto-iso ${{ steps.build.outputs.iso_path }} -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
+          else
+            gh release create auto-iso ${{ steps.build.outputs.iso_path }} -t ISO -n "This is an automatically generated ISO release." -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
+          fi
+      - name: Upload SHA256SUM
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run:
+          gh release upload auto-iso ${{ steps.build.outputs.iso_path }}-CHECKSUM -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
