@@ -30,14 +30,9 @@ jobs:
           variant: ${{ github.event.repository.name }}
           iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}.iso
 
-      - name: install github CLI
-        run: |
-          sudo dnf install 'dnf-command(config-manager)' -y
-          sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-          sudo dnf install gh -y
       - name: Upload ISO
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if gh release list -R ${{ github.repository_owner }}/${{ github.event.repository.name }} | grep "auto-iso"; then
             gh release view auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --json assets -q .assets[].name | xargs -L 1 gh release delete-asset auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
@@ -47,6 +42,6 @@ jobs:
           fi
       - name: Upload SHA256SUM
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run:
           gh release upload auto-iso ${{ steps.build.outputs.iso_path }}-CHECKSUM -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
