@@ -12,7 +12,7 @@ jobs:
     name: Generate and Release ISOs
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
       id-token: write
     steps:
@@ -40,8 +40,4 @@ jobs:
           else
             gh release create auto-iso ${{ steps.build.outputs.iso_path }} -t ISO -n "This is an automatically generated ISO release." -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
           fi
-      - name: Upload SHA256SUM
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run:
           gh release upload auto-iso ${{ steps.build.outputs.iso_path }}-CHECKSUM -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
