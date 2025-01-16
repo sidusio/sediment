@@ -28,7 +28,7 @@ jobs:
           image_tag: latest
           version: ${{ env.FEDORA_VERSION }}
           variant: ${{ github.event.repository.name }}
-          iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}-${{ env.FEDORA_VERSION }}.iso
+          iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}.iso
 
       - name: install github CLI
         run: |
