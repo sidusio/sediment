@@ -28,7 +28,7 @@ jobs:
           image_tag: ${{ github.sha }}
           version: ${{ env.FEDORA_VERSION }}
           variant: ${{ github.event.repository.name }}
-          iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}-${{ github.sha }}.iso
+          iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}-${{ env.FEDORA_VERSION }}.iso
 
       - name: Upload ISO as artifact
         id: upload
