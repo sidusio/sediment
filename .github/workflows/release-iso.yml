@@ -39,11 +39,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tree ${{ steps.build.outputs.iso_path }}
           if gh release list -R ${{ github.repository_owner }}/${{ github.event.repository.name }} | grep "auto-iso"; then
             gh release view auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --json assets -q .assets[].name | xargs -L 1 gh release delete-asset auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
-            gh release upload auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
           else
             gh release create auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} -t ISO -n "This is an automatically generated ISO release." -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
           fi
+          gh release upload auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
           gh release upload auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
