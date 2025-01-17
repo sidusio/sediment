@@ -1,6 +1,6 @@
 ARG OS_VERSION=41
 
-FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
+FROM quay.io/repository/fedora-ostree-desktops/sway-atomic:$OS_VERSION
 
 ARG OS_VERSION
 ENV OS_VERSION=$OS_VERSION
@@ -13,7 +13,6 @@ ENV GITHUB_PR_HEAD_SHA=$GITHUB_PR_HEAD_SHA
 
 ARG GITHUB_REF_NAME
 ENV GITHUB_REF_NAME=$GITHUB_REF_NAME
-
 
 COPY files/usr /usr
 
