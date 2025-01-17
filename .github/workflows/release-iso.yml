@@ -1,5 +1,10 @@
 on:
   workflow_dispatch:
+    inputs:
+      imageTag:
+        required: true
+        type: string
+        default: 'latest'
 
 
 env:
@@ -25,7 +30,7 @@ jobs:
           arch: x86_64
           image_name: ${{ github.event.repository.name }}
           image_repo: ${{ env.REGISTRY }}/${{ github.repository_owner }}
-          image_tag: latest
+          image_tag: ${{ github.event.inputs.imageTag }}
           version: ${{ env.FEDORA_VERSION }}
           variant: ${{ github.event.repository.name }}
           iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}.iso
