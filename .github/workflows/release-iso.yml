@@ -5,11 +5,14 @@ on:
         required: true
         type: string
         default: 'latest'
+        description: 'The tag of the container-image to bundle in the ISO'
 
 
 env:
   REGISTRY: ghcr.io
   FEDORA_VERSION: 41
+  DISTRIBUTION_BUCKET_LOCATION: gs://sediment-distribution-static-site-a658b18/downloads
+  DISTRIBUTION_ENDPOINT: https://storage.googleapis.com/sediment-distribution-static-site-a658b18/downloads
 
 name: release-iso
 jobs:
@@ -35,14 +38,26 @@ jobs:
           variant: ${{ github.event.repository.name }}
           iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}.iso
 
-      - name: Upload ISO
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
+
+      - name: Upload ISO to GCP Bucket
+        run : |
+          gsutil cp ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} ${{ env.DISTRIBUTION_BUCKET_LOCATION }}/${{ steps.build.outputs.iso_name }}
+
+
+      - name: Create Github Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if gh release list -R ${{ github.repository_owner }}/${{ github.event.repository.name }} | grep "auto-iso"; then
             gh release view auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --json assets -q .assets[].name | xargs -L 1 gh release delete-asset auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
           else
-            gh release create auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} -t ISO -n "This is an automatically generated ISO release." -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
+            gh release create auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} -t ISO -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
           fi
-          gh release upload auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
           gh release upload auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
+          gh relese edit auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --title "Auto ISO" --notes "ISO-file: ${{ env.DISTRIBUTION_ENDPOINT }}/${{ steps.build.outputs.iso_name }} " --clobber
