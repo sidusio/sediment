@@ -65,4 +65,4 @@ jobs:
             gh release create auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
           fi
           gh release upload auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
-          gh relese edit auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --title "Auto ISO" --notes "ISO-file: ${{ env.DISTRIBUTION_ENDPOINT }}/${{ steps.build.outputs.iso_name }} " --clobber
+          gh release edit auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --title "Auto ISO" --notes "ISO-file: ${{ env.DISTRIBUTION_ENDPOINT }}/${{ steps.build.outputs.iso_name }} " --clobber
