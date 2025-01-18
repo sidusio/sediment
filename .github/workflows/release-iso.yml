@@ -38,12 +38,17 @@ jobs:
           variant: ${{ github.event.repository.name }}
           iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}.iso
 
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
         with:
-          service_account_key: ${{ secrets.GCP_ACCOUNT_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          export_default_credentials: true
+          credentials_json: '${{ secrets.GCP_ACCOUNT_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Upload ISO to GCP Bucket
         run : |
