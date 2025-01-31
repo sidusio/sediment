@@ -49,6 +49,9 @@ COPY --chmod=744 scripts/google-fonts.sh scripts/nerd-fonts.sh /tmp/
 RUN /tmp/google-fonts.sh "Roboto" "Open Sans"
 RUN /tmp/nerd-fonts.sh "FiraCode" "Hack" "SourceCodePro" "Terminus" "JetBrainsMono" "NerdFontsSymbolsOnly"
 
+# Enable kanshi service
+RUN systemctl --global enable kanshi
+
 # Setup signing
 COPY signing/policy.json /usr/etc/containers/
 COPY signing/cosign.pub /usr/etc/pki/containers/sediment.pub
