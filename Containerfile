@@ -20,11 +20,11 @@ COPY files/usr /usr
 # Swap SDDM for GDM
 RUN \
   dnf remove -y sddm sddm-wayland-sway && \
-  dnf install gdm && \
+  dnf install -y gdm && \
   systemctl enable gdm
 
 # Misc. packages
-RUN dnf install \
+RUN dnf install -y \
   fish \
   kubernetes-client \
   grim \
@@ -34,7 +34,7 @@ RUN dnf install \
 
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
-  dnf install docker-ce docker-ce-cli && \
+  dnf install -y docker-ce docker-ce-cli && \
   systemctl enable docker
 
 # Fingerprint reader setup
