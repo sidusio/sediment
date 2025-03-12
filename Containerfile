@@ -42,7 +42,7 @@ RUN authselect enable-feature with-fingerprint && \
   authselect apply-changes
 
 # Install ublue-update
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/blue-build/modules/7ad6f3b1a766508085525cd979430de2639db652/modules/bling/installers/ublue-update.sh)"
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/blue-build/modules/797519720bc4814c3435d394f56d3fcc9a1a36dd/modules/bling/installers/ublue-update.sh)"
 
 # Fonts
 COPY --chmod=744 scripts/google-fonts.sh scripts/nerd-fonts.sh /tmp/
