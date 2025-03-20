@@ -17,6 +17,9 @@ ENV GITHUB_REF_NAME=$GITHUB_REF_NAME
 
 COPY files/usr /usr
 
+# Setup automatic updates
+RUN systemctl enable system-update.timer
+
 # Swap SDDM for GDM
 RUN \
   dnf remove -y sddm sddm-wayland-sway && \
