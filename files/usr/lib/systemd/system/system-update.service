@@ -3,4 +3,4 @@ Description=System Update
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/dnf update --assumeyes
+ExecStart=/usr/bin/rpm-ostree update
