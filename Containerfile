@@ -17,14 +17,17 @@ ENV GITHUB_REF_NAME=$GITHUB_REF_NAME
 
 COPY files/usr /usr
 
+# Setup automatic updates
+RUN systemctl enable system-update.timer
+
 # Swap SDDM for GDM
 RUN \
   dnf remove -y sddm sddm-wayland-sway && \
-  dnf install gdm && \
+  dnf install -y gdm && \
   systemctl enable gdm
 
 # Misc. packages
-RUN dnf install \
+RUN dnf install -y \
   fish \
   kubernetes-client \
   grim \
@@ -34,15 +37,12 @@ RUN dnf install \
 
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
-  dnf install docker-ce docker-ce-cli && \
+  dnf install -y docker-ce docker-ce-cli && \
   systemctl enable docker
 
 # Fingerprint reader setup
 RUN authselect enable-feature with-fingerprint && \
   authselect apply-changes
-
-# Install ublue-update
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/blue-build/modules/7ad6f3b1a766508085525cd979430de2639db652/modules/bling/installers/ublue-update.sh)"
 
 # Fonts
 COPY --chmod=744 scripts/google-fonts.sh scripts/nerd-fonts.sh /tmp/
