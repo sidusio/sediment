@@ -1,4 +1,4 @@
-ARG OS_VERSION=41
+ARG OS_VERSION=43
 
 FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
 
