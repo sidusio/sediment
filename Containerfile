@@ -1,6 +1,6 @@
 ARG OS_VERSION=43
 
-FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
+FROM quay.io/fedora-ostree-desktops/sway-atomic:$OS_VERSION
 
 ARG OS_VERSION
 ENV OS_VERSION=$OS_VERSION
@@ -29,6 +29,7 @@ RUN \
 # Misc. packages
 RUN dnf install -y \
   fish \
+  distrobox \
   kubernetes-client \
   grim \
   slurp \
