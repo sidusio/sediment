@@ -1,4 +1,4 @@
-ARG OS_VERSION=41
+ARG OS_VERSION=43
 
 FROM quay.io/fedora-ostree-desktops/sway-atomic:$OS_VERSION
 
