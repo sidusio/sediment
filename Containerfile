@@ -29,6 +29,7 @@ RUN \
 # Misc. packages
 RUN dnf install -y \
   fish \
+  distrobox \
   kubernetes-client \
   grim \
   slurp \
