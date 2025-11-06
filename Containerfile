@@ -1,6 +1,6 @@
 ARG OS_VERSION=41
 
-FROM ghcr.io/ublue-os/sericea-main:$OS_VERSION
+FROM quay.io/fedora-ostree-desktops/sway-atomic:$OS_VERSION
 
 ARG OS_VERSION
 ENV OS_VERSION=$OS_VERSION
