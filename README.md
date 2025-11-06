@@ -2,7 +2,7 @@
 
 [![build-ublue](https://github.com/sidusIO/sediment/actions/workflows/build.yml/badge.svg)](https://github.com/sidusIO/sediment/actions/workflows/build.yml)
 
-Sediment is an immutable desktop OS built with [rpm-ostree](https://coreos.github.io/rpm-ostree/) and based on [Fedora Sericea](https://fedoraproject.org/atomic-desktops/sway/).
+Sediment is an immutable desktop OS built with [rpm-ostree](https://coreos.github.io/rpm-ostree/) and based on [Fedora Atomic Desktops - Sway](https://fedoraproject.org/atomic-desktops/sway/).
 
 ## Getting Started
 
