@@ -37,7 +37,7 @@ RUN dnf install -y \
   wf-recorder
 
 # DankMaterial Shell
-RUN dnf copr enable avengemedia/dms && \
+RUN yes | dnf copr enable avengemedia/dms && \
   dnf install -y dms && \
   systemctl enable dms
 
