@@ -40,8 +40,6 @@ RUN dnf install -y \
 RUN yes | dnf copr enable avengemedia/dms && \
   dnf install -y dms && \
   dnf remove -y \
-    rofi \
-    rofi-themes \
     network-manager-applet
 
 # Docker
