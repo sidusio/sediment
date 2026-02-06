@@ -38,7 +38,9 @@ RUN dnf install -y \
 
 # DankMaterial Shell
 RUN yes | dnf copr enable avengemedia/dms && \
-  dnf install -y dms 
+  dnf install -y dms && \
+  systemctl --user enable dms && \
+  systemctl --user add-wants sway-session.target dms
 
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
