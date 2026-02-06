@@ -36,6 +36,11 @@ RUN dnf install -y \
   swappy \
   wf-recorder
 
+# DankMaterial Shell
+RUN dnf copr enable avengemedia/dms && \
+  dnf install -y dms && \
+  systemctl enable dms
+
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
   dnf install -y docker-ce docker-ce-cli && \
