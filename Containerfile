@@ -39,6 +39,7 @@ RUN dnf install -y \
 # DankMaterial Shell
 RUN yes | dnf copr enable avengemedia/dms && \
   dnf install -y dms && \
+  system enable /usr/lib/systemd/user/dms.service && \
   dnf remove -y \
   network-manager-applet \
   rofi \
