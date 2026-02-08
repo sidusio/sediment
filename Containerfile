@@ -40,7 +40,9 @@ RUN dnf install -y \
 RUN yes | dnf copr enable avengemedia/dms && \
   dnf install -y dms && \
   dnf remove -y \
-    network-manager-applet
+  network-manager-applet \
+  rofi \
+  rofi-themes
 
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
