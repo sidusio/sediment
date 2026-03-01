@@ -39,11 +39,13 @@ RUN dnf install -y \
 # DankMaterial Shell
 RUN yes | dnf copr enable avengemedia/dms && \
   dnf install -y dms && \
-  systemctl enable /usr/lib/systemd/user/dms.service && \
+  systemctl --global enable dms.service && \
   dnf remove -y \
+  dunst \
   network-manager-applet \
   rofi \
   rofi-themes
+RUN systemctl --global is-enabled dms.service
 
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
