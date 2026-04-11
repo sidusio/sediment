@@ -75,7 +75,7 @@ jobs:
           images+="${tag}@${DIGEST} "
         done
 
-        cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
+        cosign sign --yes --key env://COSIGN_PRIVATE_KEY --tlog-upload=false --new-bundle-format=false --use-signing-config=false ${images}
       env:
         TAGS: ${{ steps.push.outputs.registry-paths }}
         DIGEST: ${{ steps.push.outputs.digest }}
