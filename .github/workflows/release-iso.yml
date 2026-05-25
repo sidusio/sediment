@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  FEDORA_VERSION: 41
+  FEDORA_VERSION: 44
   DISTRIBUTION_BUCKET_LOCATION: gs://sediment-distribution-static-site-a658b18/downloads
   DISTRIBUTION_ENDPOINT: https://storage.googleapis.com/sediment-distribution-static-site-a658b18/downloads
 
