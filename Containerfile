@@ -1,4 +1,4 @@
-ARG OS_VERSION=41
+ARG OS_VERSION=44
 
 FROM quay.io/fedora-ostree-desktops/sway-atomic:$OS_VERSION
 
@@ -17,6 +17,9 @@ ENV GITHUB_REF_NAME=$GITHUB_REF_NAME
 
 COPY files/usr /usr
 
+# Setup automatic updates
+RUN systemctl enable system-update.timer
+
 # Swap SDDM for GDM
 RUN \
   dnf remove -y sddm sddm-wayland-sway && \
@@ -26,11 +29,23 @@ RUN \
 # Misc. packages
 RUN dnf install -y \
   fish \
+  distrobox \
   kubernetes-client \
   grim \
   slurp \
   swappy \
   wf-recorder
+
+# DankMaterial Shell
+RUN yes | dnf copr enable avengemedia/dms && \
+  dnf install -y dms && \
+  systemctl --global enable dms.service && \
+  dnf remove -y \
+  dunst \
+  network-manager-applet \
+  rofi \
+  rofi-themes
+RUN systemctl --global is-enabled dms.service
 
 # Docker
 RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://download.docker.com/linux/fedora/docker-ce.repo" && \
@@ -41,13 +56,13 @@ RUN curl -o "/etc/yum.repos.d/docker.com.linux.fedora.docker-ce.repo" "https://d
 RUN authselect enable-feature with-fingerprint && \
   authselect apply-changes
 
-# Install ublue-update
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/blue-build/modules/7ad6f3b1a766508085525cd979430de2639db652/modules/bling/installers/ublue-update.sh)"
-
 # Fonts
 COPY --chmod=744 scripts/google-fonts.sh scripts/nerd-fonts.sh /tmp/
 RUN /tmp/google-fonts.sh "Roboto" "Open Sans"
 RUN /tmp/nerd-fonts.sh "FiraCode" "Hack" "SourceCodePro" "Terminus" "JetBrainsMono" "NerdFontsSymbolsOnly"
+
+# Enable kanshi service
+RUN systemctl --global enable kanshi
 
 # Setup signing
 COPY signing/policy.json /usr/etc/containers/
