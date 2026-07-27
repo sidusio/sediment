@@ -59,7 +59,7 @@ jobs:
 
     - name: Push Images
       id: push
-      uses: redhat-actions/push-to-registry@v2
+      uses: redhat-actions/push-to-registry@v3
       with:
         registry: ${{ env.REGISTRY }}
         image: ${{ steps.build.outputs.image }}
