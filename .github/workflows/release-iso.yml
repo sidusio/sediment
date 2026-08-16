@@ -1,9 +1,18 @@
 on:
-  push:
-    paths:
-      - 'boot_menu.yml'
-      - '.github/workflows/release-iso.yml'
   workflow_dispatch:
+    inputs:
+      imageTag:
+        required: true
+        type: string
+        default: 'latest'
+        description: 'The tag of the container-image to bundle in the ISO'
+
+
+env:
+  REGISTRY: ghcr.io
+  FEDORA_VERSION: 44
+  DISTRIBUTION_BUCKET_LOCATION: gs://sediment-distribution-static-site-a658b18/downloads
+  DISTRIBUTION_ENDPOINT: https://storage.googleapis.com/sediment-distribution-static-site-a658b18/downloads
 
 name: release-iso
 jobs:
@@ -12,36 +21,48 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    container: 
-      image: fedora:39
-      options: --privileged
+      packages: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v6
-      - name: Generate ISO  
-        uses: ublue-os/isogenerator@v2.3.1
-        id: isogenerator
+      - uses: actions/checkout@v4
+
+      - name: Build ISO
+        uses: jasonn3/build-container-installer@main
+        id: build
         with:
-          image-name: ${{ github.event.repository.name }}
-          installer-repo: releases
-          installer-major-version: 39
-          boot-menu-path: boot_menu.yml
-      - name: install github CLI
-        run: |
-          sudo dnf install 'dnf-command(config-manager)' -y
-          sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-          sudo dnf install gh -y
-      - name: Upload ISO
+          arch: x86_64
+          image_name: ${{ github.event.repository.name }}
+          image_repo: ${{ env.REGISTRY }}/${{ github.repository_owner }}
+          image_tag: ${{ github.event.inputs.imageTag }}
+          version: ${{ env.FEDORA_VERSION }}
+          variant: ${{ github.event.repository.name }}
+          iso_name: ${{ github.event.repository.name }}-${{ env.FEDORA_VERSION }}.iso
+
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_ACCOUNT_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
+          project_id: ${{ env.GCP_PROJECT_ID }}
+
+      - name: Upload ISO to GCP Bucket
+        run : |
+          gsutil cp ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }} ${{ env.DISTRIBUTION_BUCKET_LOCATION }}/${{ steps.build.outputs.iso_name }}
+
+
+      - name: Create Github Release
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if gh release list -R ${{ github.repository_owner }}/${{ github.event.repository.name }} | grep "auto-iso"; then
             gh release view auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --json assets -q .assets[].name | xargs -L 1 gh release delete-asset auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
-            gh release upload auto-iso ${{ steps.isogenerator.outputs.iso-path }} -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
           else
-            gh release create auto-iso ${{ steps.isogenerator.outputs.iso-path }} -t ISO -n "This is an automatically generated ISO release." -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
+            gh release create auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }}
           fi
-      - name: Upload SHA256SUM
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run:
-          gh release upload auto-iso ${{ steps.isogenerator.outputs.sha256sum-path }} -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
+          gh release upload auto-iso ${{ steps.build.outputs.iso_path }}/${{ steps.build.outputs.iso_name }}-CHECKSUM -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --clobber
+          gh release edit auto-iso -R ${{ github.repository_owner }}/${{ github.event.repository.name }} --title "Auto ISO" --notes "ISO-file: ${{ env.DISTRIBUTION_ENDPOINT }}/${{ steps.build.outputs.iso_name }}"
