@@ -64,6 +64,9 @@ RUN /tmp/nerd-fonts.sh "FiraCode" "Hack" "SourceCodePro" "Terminus" "JetBrainsMo
 # Enable kanshi service
 RUN systemctl --global enable kanshi
 
+# Enable ssh agent (socket activated, prompts via gcr)
+RUN systemctl --global enable gcr-ssh-agent.socket
+
 # Setup signing
 COPY signing/policy.json /usr/etc/containers/
 COPY signing/cosign.pub /usr/etc/pki/containers/sediment.pub
