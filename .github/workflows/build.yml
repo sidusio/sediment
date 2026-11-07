@@ -41,7 +41,7 @@ jobs:
 
     - name: Build Image
       id: build
-      uses: redhat-actions/buildah-build@v2
+      uses: redhat-actions/buildah-build@v3
       with:
         image: ${{ github.repository }}
         containerfiles: Containerfile
